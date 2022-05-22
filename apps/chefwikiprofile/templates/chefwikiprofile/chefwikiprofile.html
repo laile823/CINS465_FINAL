@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+
+{% load humanize %}
+
+{% block content %}
+    <div class = "container">
+        <div class="columns">
+            <div class="column is-12">
+                <h1 class ="title">{{user.username}}</h1>
+
+                {% if user.chefwikiprofile.avatar %}
+                <figure class="image is-128x128">
+                    <img src="{{ user.chefwikiprofile.avatar.url }}">
+                </figure>
+                {% endif %}
+            
+
+                <p>Followers: {{ user.chefwikiprofile.followed_by.count}}</p>
+                <p>Following: {{user.chefwikiprofile.follows.count}}</p>
+
+                {% if user != request.user %}
+                    <a href="{% url 'follow_chefer' user.username%}" class="button is-success">Follow</a>
+                {% endif %}
+        </div>
+    </div>
+
+    <div class="columns">
+        <div class="column is-8">
+            <div class="wrapper-chefs">
+                {% for chef in user.Chefs.all %}
+                    <div class ="chef">
+                        <p class="name">{{ chef.created_by.username }}</p>
+                        <p>{{ chef.body }}</p>
+                        <p class="info">{{ chef.creted_at|naturaltime }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        <div>
+    </div>
+{% endblock %}

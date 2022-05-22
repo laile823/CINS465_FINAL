@@ -1,0 +1,97 @@
+{% extends 'core/base.html' %}
+
+{% load humanize %}
+
+{% block content %}
+    <div class="continer" id="feedapp">
+        <div class="columns">
+            <div class="column is-12">
+                <div class = "wrapper-form">
+                    <form v-on:submit.prevent="submitChef()">
+                        <div class="field">
+                            <div class="control">
+                                <textarea class="textarea" v-model="body" placeholder="What are you adding?"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="field">
+                             <div class="control">
+                                <button class="button is-success">Submit</button>
+                        </div>
+                    </div>
+             </form> 
+        </div>
+
+            <div class="wrapper-chefs">
+                {% for chef in chefs %}
+                    <div class="chef">
+                        <p class="name">{{ chef.created_by.username }}</p>
+                        <p>{{ chef.body }}</p>
+                        <p class="info">{{ chef.created_at|naturaltime }}</p>
+                {% endfor %}
+
+                <div class="chef" v-for="chef in chefs">
+                    <p class="name"> [[ chef.chefer ]]</p>
+                    <p>[[ chef.body ]]</p>
+                    <p class="info"> [[ chef.created_at ]]</p>
+                </div>
+            </div>
+        </div> 
+    </div> 
+{% endblock %}
+
+{% block script %}
+<script>
+    new Vue({
+        el: '#feedapp',
+        delimiters: ['[[', ']]'],
+        data () {
+            return {
+                chefs: [],
+                body: '',
+                chefer: '{{ request.user.username }}',
+                created_at: 'Now'
+            }
+        },
+
+        methods: {
+            submitChef() {
+                console.log('submitChef');
+
+                if (this.body.length > 0) {
+                    var chef = {
+                        'body': this.body,
+                        'chefer': this.chefer,
+                        'created_at': this.created_at
+                    };
+
+                    //backend for saving
+                    this.chefs.unshift(chef);
+                    
+                    fetch('/api/add_chef/',  {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(chef)
+                    })
+                    .then((response) => {
+                        console.log(response)
+                    })
+                    
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                    
+
+
+                }
+
+                this.body = '';
+            }
+        }
+    })
+</script> 
+{% endblock %}

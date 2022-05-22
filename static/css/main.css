@@ -1,0 +1,25 @@
+
+
+body {
+    background: #f9f9f9;
+}
+
+.wrapper-chefs {
+    margin-top: 30px;
+}
+
+    .wrapper-chefs .chef {
+        margin-bottom: 10px;
+        padding: 20px;
+        border-radius: 4px;
+        background: #fff
+    }
+
+    .wrapper-chefs .chef .name {
+        font-weight: bold;
+    }
+
+    .wrapper-chefs .chef .info {
+        font-size: 12px;
+        color: #aaa;
+    }
